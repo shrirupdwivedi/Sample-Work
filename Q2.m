@@ -1,0 +1,65 @@
+clear
+clc
+close
+tic
+for count=1:20
+n=5;
+x0=zeros(n,1);
+for i=1:(n/2)
+    x0(2*i-1)=(5-(-5)).*rand(1,1) + (-5);
+    x0(2*i)=(5-(-5)).*rand(1,1) + (-5);
+end
+
+
+
+[f_hist,sd]=GD(n,x0,10^(-6));
+
+x=2:length(f_hist);
+f_hist1=f_hist(x);
+x1=1:length(f_hist1);
+
+%Plot value against iteration
+% x=1:length(f_hist);
+figure(1)
+plot(x1,f_hist1,'LineWidth',0.75,'Marker','+','MarkerSize',3);
+grid on
+hold on
+title('Function value at each iteration: Steepest Descent');
+xlabel('iteration num');
+ylabel('function value');
+
+figure(2)
+sdk=1:length(sd);
+plot(sdk,sd,'LineWidth',0.75,'Marker','+','MarkerSize',2.5);
+grid on
+hold on
+title('Norm of gradient at each iteration: Steepest Descent');
+xlabel('iteration num');
+ylabel('norm of grad value');
+
+[sol, f_hist,sd]=BFGS(n,x0,10^(-6)); 
+
+
+%plotting the convergence of objective function and norm of the gradients
+x=2:length(f_hist);
+f_hist1=f_hist(x);
+x1=1:length(f_hist1);
+figure(3)
+plot(x1,f_hist1,'LineWidth',0.8,'Marker','+','MarkerSize',2.5);
+grid on
+hold on
+title('Function value at each iteration');
+xlabel('Iteration number');
+ylabel('Function value');
+
+figure(4)
+sdk=1:length(sd);
+plot(sdk,sd,'LineWidth',0.8,'Marker','+','MarkerSize',2.5);
+grid on
+hold on
+title('Norm of gradient value at each iteration');
+xlabel('Iteration number');
+ylabel('Norm of gradient');
+
+end
+toc
