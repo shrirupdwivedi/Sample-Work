@@ -1,0 +1,54 @@
+function [solution, sol_hist,l2_hist]=BFGS(n,x0,epsilon)
+init_f=rosenbrock(n,x0); %initial value of f
+xt=x0;
+
+B=eye(n); %initialising B
+[~,grad]=rosenbrock(n,xt); %initial value of gradient
+sd1=grad;
+sol_hist=[init_f];
+
+sdk=1;
+
+
+while norm(grad)>epsilon  
+    norm(grad)
+    [f_iterate, grad]=rosenbrock(n,xt);
+    
+    
+    
+    sol_hist=[sol_hist f_iterate];
+    
+    
+    rho=0.5; %rho
+    mew1=0.01;
+    Pk=-inv(B)*grad; %Pk
+    k=0;
+    f0=rosenbrock(n,xt);
+    while f0-rosenbrock(n,xt+(rho^k)*Pk)< -mew1*(rho^k)*grad'*Pk   %applying Armijo's sufficient decrease condition 
+        k=k+1;
+    end
+    sk=(rho^k)*Pk; %Alpha is beta^k
+    xt=xt+(rho^k)*Pk;
+   
+    [~,ngrad]=rosenbrock(n,xt);
+    
+    
+    
+    yk=ngrad-grad; %yk
+   
+    B=B+((yk*yk')/(yk'*sk))-( (B*sk*sk'*B)/(sk'*B*sk) );
+    figure(2)
+    sd1=[sd1 ngrad];
+    l2_hist(sdk)=norm(sd1(sdk));
+    sdk=sdk+1;
+%         if sdk==maxit
+%             break
+%         end
+end
+solution=xt;
+
+
+
+
+
+end
